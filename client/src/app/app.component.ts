@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { AccountService } from './_services/account.service';
 
 //Decorator
 @Component({
@@ -12,18 +14,15 @@ export class AppComponent implements OnInit {
   users : any;
 
   //constructor
-  constructor(private http : HttpClient){}
+  constructor(private accountService: AccountService){}
   
   //Method for OnInit interface
   ngOnInit() {
-    this.getUsers();  
+    this.setCurrentUser();  
   }
 
-  getUsers() {
-    this.http.get('https://localhost:5001/api/users').subscribe(response => {
-      this.users = response;
-    }, error => {
-      console.log(error)
-    });
+  setCurrentUser(){
+    const user = JSON.parse(localStorage.getItem('user')!); //! to accept null
+    this.accountService.setCurrentUser(user);
   }
 }
